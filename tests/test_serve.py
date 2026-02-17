@@ -152,15 +152,15 @@ class ServeHTTPSTestBase:
         """Server responds over HTTPS by default."""
         status, body = _fetch(self.base_url + "/", use_ssl=True)
         self.assertEqual(status, 200)
-        self.assertIn("Session Logs", body)
+        self.assertIn("cc-session-logs", body)
 
     # --- Index ---
 
     def test_index_lists_sessions(self):
         status, body = _fetch(self.base_url + "/", use_ssl=True)
         self.assertIn("abc12345", body)
-        self.assertIn("view", body)
-        self.assertIn("raw", body)
+        self.assertIn("html", body)
+        self.assertIn("md", body)
 
     def test_index_shows_subagent(self):
         status, body = _fetch(self.base_url + "/", use_ssl=True)
@@ -251,7 +251,7 @@ class ServeHTTPTestBase:
         """Server works over plain HTTP with --http flag."""
         status, body = _fetch(self.base_url + "/", use_ssl=False)
         self.assertEqual(status, 200)
-        self.assertIn("Session Logs", body)
+        self.assertIn("cc-session-logs", body)
 
     def test_http_raw_markdown(self):
         status, body = _fetch(self.base_url + "/2026-02-16-1856-abc12345.md", use_ssl=False)
@@ -305,7 +305,7 @@ class ServeCustomCertTestBase:
         """Server uses custom cert/key when provided."""
         status, body = _fetch(self.base_url + "/", use_ssl=True)
         self.assertEqual(status, 200)
-        self.assertIn("Session Logs", body)
+        self.assertIn("cc-session-logs", body)
 
 
 # Dynamically create test classes for each runtime

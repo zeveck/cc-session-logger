@@ -37,87 +37,188 @@ const LABEL_RE =
   /^#\s+(?:Session|Subagent:\s+\S+)\s+.+?\u2014\s+\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?\s*\u2014\s+(.+)$/;
 
 const HTML_TEMPLATE = `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TITLE</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css">
+<link id="md-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"><\/script>
 <style>
-  body {
+  html[data-theme="dark"] body {
     background: #0d1117;
     color: #e6edf3;
+  }
+  html[data-theme="light"] body {
+    background: #ffffff;
+    color: #1f2328;
+  }
+  body {
     max-width: 960px;
     margin: 0 auto;
     padding: 2rem 1rem;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    transition: background 0.2s, color 0.2s;
   }
   .markdown-body {
     background: transparent;
   }
-  .markdown-body pre {
+  html[data-theme="dark"] .markdown-body pre,
+  html[data-theme="dark"] .markdown-body code {
     background: #161b22;
   }
-  .markdown-body code {
-    background: #161b22;
+  nav {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  nav { margin-bottom: 1.5rem; }
   nav a { color: #58a6ff; text-decoration: none; }
   nav a:hover { text-decoration: underline; }
+  .theme-toggle {
+    background: none;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  html[data-theme="dark"] .theme-toggle { color: #e6edf3; }
+  html[data-theme="light"] .theme-toggle { color: #1f2328; border-color: #d0d7de; }
   #content { display: none; }
 </style>
 </head>
 <body>
-<nav><a href="/">&larr; All sessions</a></nav>
+<nav>
+  <a href="/">&larr; All sessions</a>
+  <button class="theme-toggle" onclick="toggleTheme()">light/dark</button>
+</nav>
 <div id="raw" class="markdown-body"></div>
 <pre id="content">CONTENT</pre>
 <script>
   const md = document.getElementById('content').textContent;
   document.getElementById('raw').innerHTML = marked.parse(md);
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.dataset.theme = next;
+    localStorage.setItem('cc-theme', next);
+    const css = document.getElementById('md-css');
+    css.href = next === 'dark'
+      ? 'https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css'
+      : 'https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-light.min.css';
+  }
+  (function() {
+    const saved = localStorage.getItem('cc-theme');
+    if (saved && saved !== 'dark') {
+      document.documentElement.dataset.theme = saved;
+      document.getElementById('md-css').href =
+        'https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-light.min.css';
+    }
+  })();
 <\/script>
 </body>
 </html>`;
 
 const INDEX_TEMPLATE = `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Session Logs</title>
+<title>cc-session-logs</title>
 <style>
-  body {
+  html[data-theme="dark"] body {
     background: #0d1117;
     color: #e6edf3;
+  }
+  html[data-theme="light"] body {
+    background: #ffffff;
+    color: #1f2328;
+  }
+  body {
     max-width: 960px;
     margin: 0 auto;
     padding: 2rem 1rem;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    transition: background 0.2s, color 0.2s;
   }
-  h1 { border-bottom: 1px solid #30363d; padding-bottom: 0.5rem; }
-  .session {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #21262d;
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 0.5rem;
   }
+  html[data-theme="dark"] header { border-bottom: 1px solid #30363d; }
+  html[data-theme="light"] header { border-bottom: 1px solid #d0d7de; }
+  h1 { margin: 0; }
+  .theme-toggle {
+    background: none;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  html[data-theme="dark"] .theme-toggle { color: #e6edf3; }
+  html[data-theme="light"] .theme-toggle { color: #1f2328; border-color: #d0d7de; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .session {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  html[data-theme="dark"] .session { border-bottom: 1px solid #21262d; }
+  html[data-theme="light"] .session { border-bottom: 1px solid #d0d7de; }
+  html[data-theme="dark"] .session:hover { background: #161b22; }
+  html[data-theme="light"] .session:hover { background: #f6f8fa; }
   .session-name {
     font-family: monospace;
     font-size: 0.95rem;
   }
-  a { color: #58a6ff; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .links { font-size: 0.85rem; }
-  .links a { margin-left: 1rem; }
+  .session a.row-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .formats { font-size: 0.8rem; opacity: 0.6; }
+  .formats a { margin-left: 0.75rem; }
   .subagent { opacity: 0.7; font-size: 0.85rem; margin-left: 0.5rem; }
-  .label { color: #8b949e; margin-left: 0.75rem; font-style: italic; }
-  .empty { color: #8b949e; font-style: italic; }
+  .label { margin-left: 0.75rem; font-style: italic; }
+  html[data-theme="dark"] .label { color: #8b949e; }
+  html[data-theme="light"] .label { color: #656d76; }
+  .empty { font-style: italic; }
+  html[data-theme="dark"] .empty { color: #8b949e; }
+  html[data-theme="light"] .empty { color: #656d76; }
 </style>
 </head>
 <body>
-<h1>Session Logs</h1>
+<header>
+  <h1>cc-session-logs</h1>
+  <button class="theme-toggle" onclick="toggleTheme()">light/dark</button>
+</header>
 ENTRIES
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.dataset.theme = next;
+    localStorage.setItem('cc-theme', next);
+  }
+  (function() {
+    const saved = localStorage.getItem('cc-theme');
+    if (saved && saved !== 'dark') document.documentElement.dataset.theme = saved;
+  })();
+  document.querySelectorAll('.session').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') return;
+      window.location = el.dataset.href;
+    });
+  });
+<\/script>
 </body>
 </html>`;
 
@@ -197,11 +298,13 @@ function buildIndex(logDir) {
 
     const slug = f.replace(".md", "");
     return (
-      `<div class="session">` +
-      `  <span class="session-name">${label}</span>` +
-      `  <span class="links">` +
-      `    <a href="/${slug}">view</a>` +
-      `    <a href="/${f}">raw</a>` +
+      `<div class="session" data-href="/${slug}">` +
+      `  <span class="session-name">` +
+      `<a class="row-link" href="/${slug}">${label}</a>` +
+      `</span>` +
+      `  <span class="formats">` +
+      `    <a href="/${slug}">html</a>` +
+      `    <a href="/${f}">md</a>` +
       `  </span>` +
       `</div>`
     );

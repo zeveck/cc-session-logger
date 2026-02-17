@@ -1,4 +1,4 @@
-"""claude-session-logger installer.
+"""cc-session-logger installer.
 
 Copies hook scripts to .claude/hooks/ and merges config into .claude/settings.json.
 
@@ -47,7 +47,7 @@ def prompt_yn(question, default="n"):
 
 def main():
     print()
-    print("claude-session-logger installer")
+    print("cc-session-logger installer")
     print("================================")
     print()
 

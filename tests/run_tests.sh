@@ -18,7 +18,7 @@ PASS_ARGS="$*"
 FAILED=0
 
 echo "================================"
-echo "claude-session-logger test suite"
+echo "cc-session-logger test suite"
 echo "================================"
 echo
 
@@ -45,6 +45,16 @@ echo
 # --- Installer tests ---
 echo "--- Installer tests ---"
 if python3 tests/test_installer.py $PASS_ARGS; then
+    echo "  PASS"
+else
+    echo "  FAIL"
+    FAILED=1
+fi
+echo
+
+# --- Serve tests ---
+echo "--- Serve tests ---"
+if python3 tests/test_serve.py $PASS_ARGS; then
     echo "  PASS"
 else
     echo "  FAIL"

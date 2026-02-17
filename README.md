@@ -1,4 +1,4 @@
-# claude-session-logger
+# cc-session-logger
 
 Automatically converts Claude Code JSONL transcripts into readable markdown logs after every turn. Hooks into Claude Code's `Stop` and `SubagentStop` lifecycle events — no manual effort required.
 
@@ -74,12 +74,41 @@ const TZ = process.env.TZ || "America/New_York";
 
 Logs write to `.claude/logs/` relative to the project root.
 
+## Serve
+
+Browse and share your session logs over HTTP. Start the server from your project root:
+
+**Python:**
+
+```
+python3 /path/to/claude-session-logger/py/serve.py
+```
+
+**Node.js:**
+
+```
+node /path/to/claude-session-logger/js/serve.js
+```
+
+Options:
+
+```
+--port 8080          # default: 3000
+--host 0.0.0.0       # default: 127.0.0.1 (localhost only)
+--dir .claude/logs   # default: .claude/logs
+```
+
+Routes:
+- `/` — index of all sessions
+- `/{name}` — rendered HTML (for humans)
+- `/{name}.md` — raw markdown (for machines / another Claude via WebFetch)
+
 ## Tests
 
 Run the full test suite (requires both python3 and node):
 
 ```
-cd /path/to/claude-session-logger
+cd /path/to/cc-session-logger
 ./tests/run_tests.sh
 ```
 

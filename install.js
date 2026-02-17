@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * claude-session-logger installer (Node.js)
+ * cc-session-logger installer (Node.js)
  *
  * Copies hook scripts to .claude/hooks/ and merges config into .claude/settings.json.
  *
@@ -45,7 +45,7 @@ async function main() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
   console.log();
-  console.log("claude-session-logger installer");
+  console.log("cc-session-logger installer");
   console.log("================================");
   console.log();
 

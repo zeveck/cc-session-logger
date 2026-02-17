@@ -6,18 +6,9 @@ Automatically converts Claude Code JSONL transcripts into readable markdown logs
 
 Clone this repo, then run the installer from your project directory:
 
-**Linux / macOS / WSL:**
-
 ```bash
 cd your-project
 bash /path/to/claude-session-logger/install.sh
-```
-
-**Windows (PowerShell):**
-
-```powershell
-cd your-project
-powershell -ExecutionPolicy Bypass -File \path\to\claude-session-logger\install.ps1
 ```
 
 The installer will:

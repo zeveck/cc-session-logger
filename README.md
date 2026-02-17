@@ -29,8 +29,7 @@ Restart Claude Code after installing.
 
 ### Requirements
 
-- **python3** — runs the JSONL→markdown converter and settings merge
-- **jq** — used at runtime by the hook scripts to parse JSON input
+- **python3** — runs the JSONL→markdown converter, settings merge, and JSON parsing
 - **bash** — hook scripts run in bash (Git Bash or WSL on Windows)
 
 ## Output

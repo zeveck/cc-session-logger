@@ -7,8 +7,12 @@ export TZ="${TZ:-__TZ__}"
 
 INPUT=$(cat)
 
-TRANSCRIPT_PATH=$(echo "$INPUT" | jq -r '.transcript_path // ""')
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "unknown"')
+eval "$(echo "$INPUT" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+print(f'TRANSCRIPT_PATH={chr(34)}{d.get(\"transcript_path\", \"\")}{chr(34)}')
+print(f'SESSION_ID={chr(34)}{d.get(\"session_id\", \"unknown\")}{chr(34)}')
+")"
 
 if [ -z "$TRANSCRIPT_PATH" ] || [ ! -f "$TRANSCRIPT_PATH" ]; then
   exit 0
@@ -24,7 +28,17 @@ for _ in 1 2 3 4 5 6 7 8 9 10; do
 done
 
 # Extract start timestamp from first record that has one, convert to local time
-START_TS=$(head -20 "$TRANSCRIPT_PATH" | jq -r 'select(.timestamp) | .timestamp' 2>/dev/null | head -1)
+START_TS=$(python3 -c "
+import json, sys
+for line in sys.stdin:
+    try:
+        ts = json.loads(line).get('timestamp')
+        if ts:
+            print(ts)
+            break
+    except (json.JSONDecodeError, AttributeError):
+        pass
+" < "$TRANSCRIPT_PATH" 2>/dev/null)
 if [ -n "$START_TS" ]; then
   DATE=$(date -d "$START_TS" +%Y-%m-%d 2>/dev/null || date +%Y-%m-%d)
   TIME_PART=$(date -d "$START_TS" +%H%M 2>/dev/null || echo "0000")

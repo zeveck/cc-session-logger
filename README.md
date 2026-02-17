@@ -10,14 +10,14 @@ Clone this repo, then run the installer from your project directory. Pick whiche
 
 ```
 cd your-project
-python3 /path/to/claude-session-logger/install.py
+python3 /path/to/cc-session-logger/install.py
 ```
 
 **Node.js:**
 
 ```
 cd your-project
-node /path/to/claude-session-logger/install.js
+node /path/to/cc-session-logger/install.js
 ```
 
 Both installers:
@@ -81,13 +81,13 @@ Browse and share your session logs over HTTP. Start the server from your project
 **Python:**
 
 ```
-python3 /path/to/claude-session-logger/py/serve.py
+python3 /path/to/cc-session-logger/py/serve.py
 ```
 
 **Node.js:**
 
 ```
-node /path/to/claude-session-logger/js/serve.js
+node /path/to/cc-session-logger/js/serve.js
 ```
 
 Options:

@@ -46,12 +46,15 @@ class InstallerTestBase:
     def tearDown(self):
         shutil.rmtree(self.tmpdir, ignore_errors=True)
 
-    def _run_installer(self, stdin_text):
+    def _run_installer(self, stdin_text, extra_args=None):
         """Run the installer in the temp project directory."""
         if self.runtime == "py":
             cmd = [sys.executable, PY_INSTALLER]
         else:
             cmd = ["node", JS_INSTALLER]
+
+        if extra_args:
+            cmd += extra_args
 
         result = subprocess.run(
             cmd, input=stdin_text, capture_output=True,
@@ -139,6 +142,37 @@ class InstallerTestBase:
             content = f.read()
 
         self.assertIn("America/New_York", content)
+
+    # --- --tz flag ---
+
+    def test_tz_flag_skips_prompt(self):
+        """Installer accepts --tz flag for non-interactive use."""
+        result = self._run_installer("", extra_args=["--tz", "America/Chicago"])
+
+        self.assertEqual(result.returncode, 0, f"stderr: {result.stderr}")
+
+        hooks_dir = os.path.join(self.tmpdir, ".claude", "hooks")
+        script = f"stop-log{self._ext}"
+        with open(os.path.join(hooks_dir, script), "r") as f:
+            content = f.read()
+
+        self.assertIn("America/Chicago", content)
+        self.assertNotIn("__TZ__", content)
+
+    def test_tz_flag_creates_all_files(self):
+        """Installer with --tz creates all expected files."""
+        result = self._run_installer("", extra_args=["--tz", "UTC"])
+
+        self.assertEqual(result.returncode, 0, f"stderr: {result.stderr}")
+
+        hooks_dir = os.path.join(self.tmpdir, ".claude", "hooks")
+        for script in self._expected_scripts:
+            path = os.path.join(hooks_dir, script)
+            self.assertTrue(os.path.isfile(path), f"Missing: {script}")
+
+        serve_name = f"serve-sessions{self._ext}"
+        serve_path = os.path.join(self.tmpdir, ".claude", serve_name)
+        self.assertTrue(os.path.isfile(serve_path), f"Missing: .claude/{serve_name}")
 
     # --- Settings merge ---
 

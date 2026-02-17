@@ -3,7 +3,8 @@
 Copies hook scripts to .claude/hooks/ and merges config into .claude/settings.json.
 
 Usage:
-    python3 install.py
+    python3 install.py                          # interactive TZ prompt
+    python3 install.py --tz America/New_York    # non-interactive
 """
 
 import json
@@ -46,6 +47,14 @@ def prompt_yn(question, default="n"):
     return answer.startswith("y")
 
 
+def parse_tz_flag():
+    """Parse --tz from sys.argv. Returns the value or None."""
+    for i, arg in enumerate(sys.argv[1:], 1):
+        if arg == "--tz" and i + 1 <= len(sys.argv) - 1:
+            return sys.argv[i + 1]
+    return None
+
+
 def main():
     print()
     print("cc-session-logger installer")
@@ -59,8 +68,13 @@ def main():
 
     # --- Timezone ---
 
-    print("Timezone for log timestamps (e.g. America/New_York, America/Chicago, UTC)")
-    tz_value = prompt("TZ", "America/New_York")
+    tz_flag = parse_tz_flag()
+    if tz_flag:
+        tz_value = tz_flag
+        info(f"TZ: {tz_value}")
+    else:
+        print("Timezone for log timestamps (e.g. America/New_York, America/Chicago, UTC)")
+        tz_value = prompt("TZ", "America/New_York")
     print()
 
     # --- Check for existing installation ---

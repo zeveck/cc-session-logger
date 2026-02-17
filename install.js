@@ -5,7 +5,8 @@
  * Copies hook scripts to .claude/hooks/ and merges config into .claude/settings.json.
  *
  * Usage:
- *   node install.js
+ *   node install.js                          // interactive TZ prompt
+ *   node install.js --tz America/New_York    // non-interactive
  */
 
 const fs = require("fs");
@@ -42,6 +43,14 @@ function askYn(rl, question, defaultVal = "n") {
   });
 }
 
+function parseTzFlag() {
+  const idx = process.argv.indexOf("--tz");
+  if (idx !== -1 && idx + 1 < process.argv.length) {
+    return process.argv[idx + 1];
+  }
+  return null;
+}
+
 async function main() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
@@ -60,8 +69,15 @@ async function main() {
 
   // --- Timezone ---
 
-  console.log("Timezone for log timestamps (e.g. America/New_York, America/Chicago, UTC)");
-  const tzValue = await ask(rl, "TZ", "America/New_York");
+  const tzFlag = parseTzFlag();
+  let tzValue;
+  if (tzFlag) {
+    tzValue = tzFlag;
+    console.log(`  TZ: ${tzValue}`);
+  } else {
+    console.log("Timezone for log timestamps (e.g. America/New_York, America/Chicago, UTC)");
+    tzValue = await ask(rl, "TZ", "America/New_York");
+  }
   console.log();
 
   // --- Check for existing installation ---

@@ -4,27 +4,34 @@ Automatically converts Claude Code JSONL transcripts into readable markdown logs
 
 ## Install
 
-Clone this repo, then run the installer from your project directory. Pick whichever runtime you prefer:
+> **Important:** Clone this repo, then **run the installer script** from your project directory. The installer copies hooks, configures settings, and sets your timezone. Do not manually copy files.
 
-**Python:**
-
-```
-cd your-project
-python3 /path/to/cc-session-logger/install.py
-```
-
-**Node.js:**
+**Step 1 — Clone (once):**
 
 ```
-cd your-project
-node /path/to/cc-session-logger/install.js
+git clone https://github.com/zeveck/cc-session-logger /tmp/cc-session-logger
 ```
+
+**Step 2 — Install from your project root:**
+
+Python:
+```
+cd /path/to/your-project
+python3 /tmp/cc-session-logger/install.py --tz America/New_York
+```
+
+Node.js:
+```
+cd /path/to/your-project
+node /tmp/cc-session-logger/install.js --tz America/New_York
+```
+
+The `--tz` flag sets the timezone for log timestamps (e.g. `America/New_York`, `America/Chicago`, `UTC`). Without it, the installer prompts interactively.
 
 Both installers:
 - Copy hook scripts to `.claude/hooks/`
 - Copy serve script to `.claude/serve-sessions.{py,js}`
 - Merge hook config into `.claude/settings.json`
-- Prompt for your timezone
 
 Restart Claude Code after installing.
 

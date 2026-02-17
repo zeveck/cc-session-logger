@@ -388,7 +388,7 @@ def ensure_cert(cert_dir):
         sys.exit(1)
 
     os.makedirs(cert_dir, exist_ok=True)
-    print(f"  Generating self-signed certificate in {cert_dir}/")
+    print(f"  Generating self-signed certificate in {cert_dir}/", flush=True)
 
     try:
         subprocess.run(
@@ -448,11 +448,11 @@ def main():
     host_display = "localhost" if args.host == "127.0.0.1" else args.host
     url = f"{protocol}://{host_display}:{args.port}"
 
-    print()
-    print(f"  Serving session logs at {url}")
-    print(f"  Log directory: {args.dir}")
-    print(f"  Press Ctrl+C to stop.")
-    print()
+    print(flush=True)
+    print(f"  Serving session logs at {url}", flush=True)
+    print(f"  Log directory: {args.dir}", flush=True)
+    print(f"  Press Ctrl+C to stop.", flush=True)
+    print(flush=True)
 
     try:
         server.serve_forever()

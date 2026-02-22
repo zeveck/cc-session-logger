@@ -20,8 +20,8 @@ const HOOK_SCRIPTS = ["stop-log.cjs", "subagent-stop-log.cjs", "log-converter.cj
 const SERVE_SCRIPT = "serve-sessions.cjs";
 
 const HOOKS_CONFIG = {
-  Stop: [{ hooks: [{ type: "command", command: "node .claude/hooks/stop-log.cjs" }] }],
-  SubagentStop: [{ hooks: [{ type: "command", command: "node .claude/hooks/subagent-stop-log.cjs" }] }],
+  Stop: [{ hooks: [{ type: "command", command: 'node "$(git rev-parse --show-toplevel)/.claude/hooks/stop-log.cjs"' }] }],
+  SubagentStop: [{ hooks: [{ type: "command", command: 'node "$(git rev-parse --show-toplevel)/.claude/hooks/subagent-stop-log.cjs"' }] }],
 };
 
 function ask(rl, question, defaultVal) {

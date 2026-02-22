@@ -20,8 +20,8 @@ HOOK_SCRIPTS = ["stop-log.py", "subagent-stop-log.py", "log-converter.py"]
 SERVE_SCRIPT = "serve-sessions.py"
 
 HOOKS_CONFIG = {
-    "Stop": [{"hooks": [{"type": "command", "command": "python3 .claude/hooks/stop-log.py"}]}],
-    "SubagentStop": [{"hooks": [{"type": "command", "command": "python3 .claude/hooks/subagent-stop-log.py"}]}],
+    "Stop": [{"hooks": [{"type": "command", "command": 'python3 "$(git rev-parse --show-toplevel)/.claude/hooks/stop-log.py"'}]}],
+    "SubagentStop": [{"hooks": [{"type": "command", "command": 'python3 "$(git rev-parse --show-toplevel)/.claude/hooks/subagent-stop-log.py"'}]}],
 }
 
 

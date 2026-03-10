@@ -102,17 +102,17 @@ function main() {
     localTs = "";
   }
 
-  fs.mkdirSync(".claude/logs", { recursive: true });
+  const logsDir = path.join(__dirname, "..", "logs");
+  fs.mkdirSync(logsDir, { recursive: true });
 
-  const scriptDir = __dirname;
   const shortSession = sessionId.slice(0, 8);
   const shortAgent = agentId.slice(0, 8);
-  const logFile = `.claude/logs/${dateStr}-${timePart}-${shortSession}-subagent-${agentType}-${shortAgent}.md`;
-  const errorLog = ".claude/logs/.converter-errors.log";
+  const logFile = path.join(logsDir, `${dateStr}-${timePart}-${shortSession}-subagent-${agentType}-${shortAgent}.md`);
+  const errorLog = path.join(logsDir, ".converter-errors.log");
 
   try {
     execFileSync(process.execPath, [
-      path.join(scriptDir, "log-converter.cjs"),
+      path.join(__dirname, "log-converter.cjs"),
       "--transcript", transcriptPath,
       "--output", logFile,
       "--session-id", sessionId,
